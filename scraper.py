@@ -1,36 +1,49 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
-import pandas as pd
 import time
 
-# Setează calea către driverul browserului tău (ex. chromedriver)
-driver_path = 'https://roic.ai/quote/AAPL:USr'
-driver = webdriver.Chrome(driver_path)
+def scrape_financial_values(url):
+    # Create a new instance of the Chrome driver
+    driver_path = r'M:\a\facultate\disertatie\myDisertation\chromedriver-win64\chromedriver-win64.exe'  # make sure this is the correct path
 
-# Deschide URL-ul
-url = 'https://roic.ai/quote/AAPL:US'
-driver.get(url)
+# Initialize Chrome WebDriver
+    options = webdriver.ChromeOptions()  # This line ensures you're using ChromeOptions
 
-# Așteaptă câteva secunde pentru a se încărca pagina
-time.sleep(5)
+    driver = webdriver.Chrome(executable_path=driver_path, options=options)
 
-# Obține sursa paginii și creează un obiect BeautifulSoup
-html = driver.page_source
-soup = BeautifulSoup(html, 'html.parser')
+    driver = webdriver.Chrome()
+    
+    # Open the URL
+    driver.get(url)
+    
+    # Wait for the page to fully load (adjust the time.sleep value if needed)
+    time.sleep(5)
+    
+    # Get the page source after it's fully loaded
+    page_source = driver.page_source
+    
+    # Close the driver
+    driver.quit()
+    
+    # Parse the HTML content
+    soup = BeautifulSoup(page_source, 'html.parser')
+    
+    # Find all <div> elements with the specified class
+    divs = soup.find_all('div', class_='w-20 py-1 text-foreground pr-3 text-right text-2xs')
+    
+    # Extract and return the values
+    values = [div.text.strip() for div in divs]
+    return values
 
-# Închide browserul
-driver.quit()
+# URL of the website to scrape
+url = "https://roic.ai/quote/AAPL:US"
 
-# Acum poți folosi BeautifulSoup pentru a extrage datele
-data_containers = soup.find_all('div', {'data-cy': 'financial_table_value'})
-rows = []
-for container in data_containers:
-    cols = container.find_all('div', class_='w-20 py-1 text-foreground pr-3 text-right text-2xs')
-    row_data = [col.get_text(strip=True) for col in cols]
-    rows.append(row_data)
+# Call the function to scrape financial values
+financial_values = scrape_financial_values(url)
 
-# Creare DataFrame cu datele
-df = pd.DataFrame(rows)
-
-# Afișează DataFrame-ul
-print(df)
+# Print the scraped values
+if financial_values:
+    for value in financial_values:
+        print(value)
+else:
+    print("No financial values found.")
