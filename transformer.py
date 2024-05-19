@@ -40,9 +40,25 @@ for ticker in tickers:
         data_frames[f'{ticker}_cashflowStatement'] = df_cashflow
         # df_cashflow.to_csv(f'{ticker}_cashflowStatement.csv', index=False)
 
+        # Process Ratios data
+    ratios_file_path = os.path.join(directory, f'{ticker}_ratios.json')
+    if os.path.exists(ratios_file_path):
+        with open(ratios_file_path, 'r') as file:
+            nested_json_data = json.load(file)
+        df_ratios = pd.json_normalize(nested_json_data['report'], sep='_')
+        data_frames[f'{ticker}_ratios'] = df_ratios
+
+        # Process Dividend data
+    dividend_file_path = os.path.join(directory, f'{ticker}_dividendData.json')
+    if os.path.exists(dividend_file_path):
+        with open(dividend_file_path, 'r') as file:
+            nested_json_data = json.load(file)
+        df_dividend = pd.json_normalize(nested_json_data['report'], sep='_')
+        data_frames[f'{ticker}_dividendData'] = df_dividend
+
 # Merge all tickers' data into a single Excel file with each ticker on a different sheet
-with pd.ExcelWriter('All_Tickers_Data.xlsx') as writer:
+with pd.ExcelWriter('dataForMyDisertation.xlsx') as writer:
     for sheet_name, df in data_frames.items():
         df.to_excel(writer, sheet_name=sheet_name, index=False)
 
-print("Data processing and merging complete. Check the 'All_Tickers_Data.xlsx' file.")
+print("Data processing and merging complete. Check the 'dataForMyDisertation.xlsx' file.")
