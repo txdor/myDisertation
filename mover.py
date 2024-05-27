@@ -3,8 +3,8 @@ from sqlalchemy import create_engine
 import os
 
 # SQL Server connection details for Windows Authentication
-server = 'your_server_name'  # Replace with your server name or IP
-database = 'your_database_name'  # Replace with your database name
+server = 'DESKTOP-B8G31OU'  # Replace with your server name or IP
+database = 'testDBscript'  # Replace with your database name
 driver = 'ODBC Driver 17 for SQL Server'  # Ensure this driver is installed
 
 # Create the connection string for Windows Authentication
