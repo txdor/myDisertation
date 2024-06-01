@@ -1,3 +1,7 @@
-pandas==1.4.2
-sqlalchemy==1.4.32
-
+pandas
+sqlalchemy
+pyodbc
+openpyxl
+matplotlib 
+numpy 
+scikit-learn
